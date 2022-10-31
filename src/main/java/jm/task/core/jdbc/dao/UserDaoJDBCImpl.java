@@ -8,17 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoJDBCImpl implements UserDao {
-    static Statement statement;
-    static Connection connection;
+    static Connection connection = Util.getConnection();
 
-    static {
-        try {
-            connection = Util.getConnection();
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public UserDaoJDBCImpl() {
     }
@@ -34,7 +26,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 ENGINE = InnoDB
                 DEFAULT CHARACTER SET = utf8
                 COLLATE = utf8_bin;""";
-        try {
+        try (Statement statement = connection.createStatement()) {
             statement.execute(createTable);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -43,7 +35,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DROP TABLE IF EXISTS users");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,7 +84,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        try {
+        try (Statement statement = connection.createStatement()) {
             statement.executeUpdate("DELETE FROM users");
         } catch (SQLException e) {
             e.printStackTrace();
