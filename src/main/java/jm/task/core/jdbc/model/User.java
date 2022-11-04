@@ -4,18 +4,29 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Table
+
+//import com.sun.xml.bind.v2.TODO;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name="users")
 public class User {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id")
     private Long id;
 
-    @Column
+    @Basic
+    @Column(name="name")
     private String name;
 
-    @Column
+    @Basic
+    @Column(name="lastName")
     private String lastName;
 
-    @Column
+    @Basic
+    @Column(name="age")
     private Byte age;
 
     public User() {
@@ -31,11 +42,11 @@ public class User {
     public Long getId() {
         return id;
     }
-
+/**
     public void setId(Long id) {
         this.id = id;
     }
-
+*/
     public String getName() {
         return name;
     }
