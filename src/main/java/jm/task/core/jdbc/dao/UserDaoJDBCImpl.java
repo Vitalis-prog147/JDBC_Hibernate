@@ -6,7 +6,7 @@ import jm.task.core.jdbc.util.Util;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
 public class UserDaoJDBCImpl implements UserDao {
     static Connection connection = Util.getConnection();
 
@@ -92,3 +92,4 @@ public class UserDaoJDBCImpl implements UserDao {
 
     }
 }
+*/
