@@ -1,12 +1,5 @@
 package jm.task.core.jdbc.model;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-
-//import com.sun.xml.bind.v2.TODO;
-
 import javax.persistence.*;
 
 @Entity
@@ -46,6 +39,7 @@ public class User {
     public void setId(Long id) {
         this.id = id;
     }
+ // при автоматической генерации поля, смысла не имеет задавать параметр
 */
     public String getName() {
         return name;

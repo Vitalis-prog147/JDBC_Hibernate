@@ -13,28 +13,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Util {
-    /**
-     * private static final String URL = "jdbc:mysql://localhost:3306/users";
-     * private static final String USERNAME = "root";
-     * private static final String PASSWORD = "root";
-     * private static Connection;
-     * <p>
-     * <p>
-     * public static Connection getConnection() {
-     * try {
-     * Class.forName("com.mysql.cj.jdbc.Driver");
-     * connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-     * } catch (SQLException | ClassNotFoundException e) {
-     * e.printStackTrace();
-     * }
-     * return connection;
-     * }
-     * <p>
-     * public static SessionFactory getSessionFactory() {
-     * Configuration configuration = new Configuration().addAnnotatedClass(User.class);
-     * return configuration.buildSessionFactory();
-     * }
-     */
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String HOST = "jdbc:mysql://localhost:3306/users";
     private static final String LOGIN = "root";

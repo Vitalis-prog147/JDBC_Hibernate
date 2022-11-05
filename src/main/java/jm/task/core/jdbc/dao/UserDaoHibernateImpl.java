@@ -87,18 +87,6 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        /**
-         * PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users");
-         ResultSet resultSet = preparedStatement.executeQuery();
-         while (resultSet.next()) {
-         User user = new User();
-         user.setId(resultSet.getLong("userId"));
-         user.setName(resultSet.getString("name"));
-         user.setLastName(resultSet.getString("last_name"));
-         user.setAge(resultSet.getByte("age"));
-         list.add(user);
-         */
-
         Session session = Util.getConnection().openSession();
         CriteriaQuery<User> criteriaQuery = session.getCriteriaBuilder().createQuery(User.class);
         criteriaQuery.from(User.class);
@@ -120,23 +108,4 @@ public class UserDaoHibernateImpl implements UserDao {
     public void cleanUsersTable() throws SQLException {
 
     }
-/**
-    @Override
-    public void cleanUsersTable() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.createNativeQuery("DELETE FROM users.users").executeUpdate();
-            transaction.commit();
-            System.out.println("Table was cleaned");
-        } catch (HibernateException e) {
-            e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        } finally {
-            session.close();
-        }
-    }
-    */
 }
