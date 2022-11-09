@@ -1,36 +1,31 @@
 package jm.task.core.jdbc.dao;
-
-import jakarta.persistence.criteria.CriteriaQuery;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
-    private final SessionFactory sessionFactory = Util.getConnection();
 
     public UserDaoHibernateImpl() {
 
     }
-    @SuppressWarnings("deprecation")
+
     @Override
     public void createUsersTable() {
-        try {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-
-            session.createNativeQuery("""
-                    CREATE TABLE IF NOT EXISTS users.users (
-                    id int not null auto_increment, name VARCHAR(50),
-                    lastname VARCHAR(50),
-                    `age` INT NOT NULL,
-                    PRIMARY KEY (id))
-                    """).executeUpdate();
+        String createUsersTable = """
+                CREATE TABLE IF NOT EXISTS users.users  (
+                        id int not null auto_increment, name VARCHAR(50),
+                        lastname VARCHAR(50),
+                        `age` INT NOT NULL,
+                        PRIMARY KEY (id))""";
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.createNativeQuery(createUsersTable).executeUpdate();
             transaction.commit();
             System.out.println("Table has been created");
         } catch (HibernateException e) {
@@ -38,74 +33,69 @@ public class UserDaoHibernateImpl implements UserDao {
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void dropUsersTable() {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.createNativeQuery("DROP TABLE IF EXISTS users").executeUpdate();
-            System.out.println("Table has been created");
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.createNativeQuery("DROP TABLE IF EXISTS users.users").executeUpdate();
+            transaction.commit();
+            System.out.println("Table has been dropped");
         } catch (HibernateException e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
-            session.save(new User(name, lastName, age));
+        User user = new User(name, lastName, age);
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.save(user);
             transaction.commit();
             System.out.printf("User с именем – %s добавлен в базу данных\n", name);
         } catch (HibernateException e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void removeUserById(long id) {
-        Session session = Util.getConnection().openSession();
-        Transaction transaction = session.beginTransaction();
-        try {
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             session.delete(session.get(User.class, id));
             transaction.commit();
-            System.out.println("User has been deleted");
+            System.out.println("User has been removed");
         } catch (HibernateException e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 
     @Override
     public List<User> getAllUsers() {
-        Session session = Util.getConnection().openSession();
-        CriteriaQuery<User> criteriaQuery = session.getCriteriaBuilder().createQuery(User.class);
-        criteriaQuery.from(User.class);
-        Transaction transaction = session.beginTransaction();
-        List<User> userList = session.createQuery(criteriaQuery).getResultList();
-        try {
+        List<User> userList = new ArrayList<>();
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            userList = session.createQuery("from (User.class)").list();
             transaction.commit();
-            return userList;
         } catch (HibernateException e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
         return userList;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public void cleanUsersTable() throws SQLException {
-
+    public void cleanUsersTable(){
+        Transaction transaction = null;
+        try (Session session = Util.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.createNativeQuery("TRUNCATE TABLE users.users").executeUpdate();
+            transaction.commit();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        }
     }
 }

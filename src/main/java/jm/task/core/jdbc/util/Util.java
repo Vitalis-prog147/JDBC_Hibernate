@@ -1,16 +1,10 @@
 package jm.task.core.jdbc.util;
-
 import jm.task.core.jdbc.model.User;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 public class Util {
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
@@ -19,7 +13,7 @@ public class Util {
     private static final String PASSWORD = "root";
     private static SessionFactory sessionFactory = null;
 
-    public static SessionFactory getConnection() {
+    public static SessionFactory getSessionFactory() {
         try {
             Configuration configuration = new Configuration()
                     .setProperty("hibernate.connection.driver_class", DRIVER)
@@ -27,7 +21,7 @@ public class Util {
                     .setProperty("hibernate.connection.username", LOGIN)
                     .setProperty("hibernate.connection.password", PASSWORD)
                     .addAnnotatedClass(User.class);
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+            StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
             sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 
@@ -35,10 +29,5 @@ public class Util {
             throw new RuntimeException(e);
         }
         return sessionFactory;
-
-    }
-    public static SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().addAnnotatedClass(User.class);
-        return configuration.buildSessionFactory();
     }
 }
